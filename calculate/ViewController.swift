@@ -9,12 +9,23 @@ import UIKit
 import SnapKit
 import Foundation
 
+enum Operations: Int {
+    case pluse = 99
+    case minus = 100
+    case divede = 101
+    case multiply = 102
+}
+
 class ViewController: UIViewController {
     
-    var currentNumber: String = ""
+    var currentNumber: String = "" {
+        didSet { resultLabel.text = String(Int(currentNumber) ?? 0) }
+    }
     var firstOperand: Double = 0
     var operatorSelected: String = ""
     var isTypingNumber: Bool = false
+    var tempNumber: String = ""
+    var currentOperation: Operations?
     
     let resultView: UIView = {
         let view = UIView()
@@ -28,47 +39,50 @@ class ViewController: UIViewController {
     let resultLabel: UILabel = {
         let label = UILabel()
         label.text = "0"
-        label.numberOfLines = 0
+        label.numberOfLines = 1
+        label.adjustsFontSizeToFitWidth = true
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 90)
         return label
     }()
     
     let zeroButton: UIButton = {
-          let button = UIButton()
-          button.backgroundColor = .systemIndigo
-          button.setTitle("0", for: .normal)
-          button.titleLabel?.font = button.titleLabel?.font.withSize(24)
-          button.addTarget(self, action: #selector(zeroTapped), for: .touchUpInside)
-          button.clipsToBounds = true
-          button.layer.cornerRadius = 40
-          return button
-      }()
+        let button = UIButton()
+        button.backgroundColor = .systemIndigo
+        button.setTitle("0", for: .normal)
+        button.tag = 0
+        button.titleLabel?.font = button.titleLabel?.font.withSize(24)
+        button.addTarget(self, action: #selector(digitButtonPressed), for: .touchUpInside)
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 40
+        return button
+    }()
     
     let firstButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .systemIndigo
         button.setTitle("1", for: .normal)
         button.titleLabel?.textColor = .red
+        button.tag = 1
         button.titleLabel?.font = button.titleLabel?.font.withSize(24)
         button.addTarget(self, action: #selector(digitButtonPressed), for: .touchUpInside)
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
     }()
-
+    
     let secondButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .systemIndigo
         button.setTitle("2", for: .normal)
         button.titleLabel?.font = button.titleLabel?.font.withSize(24)
         button.addTarget(self, action: #selector(digitButtonPressed), for: .touchUpInside)
-        
+        button.tag = 2
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
     }()
-  
+    
     
     let thirdButton: UIButton = {
         let button = UIButton()
@@ -76,19 +90,20 @@ class ViewController: UIViewController {
         button.setTitle("3", for: .normal)
         button.titleLabel?.font = button.titleLabel?.font.withSize(24)
         button.addTarget(self, action: #selector(digitButtonPressed), for: .touchUpInside)
-        
+        button.tag = 3
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
     }()
     
-
+    
     let fourthButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .systemIndigo
         button.setTitle("4", for: .normal)
         button.titleLabel?.font = button.titleLabel?.font.withSize(24)
-        
+        button.addTarget(self, action: #selector(digitButtonPressed), for: .touchUpInside)
+        button.tag = 4
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
@@ -99,7 +114,8 @@ class ViewController: UIViewController {
         button.backgroundColor = .systemIndigo
         button.setTitle("5", for: .normal)
         button.titleLabel?.font = button.titleLabel?.font.withSize(24)
-        
+        button.addTarget(self, action: #selector(digitButtonPressed), for: .touchUpInside)
+        button.tag = 5
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
@@ -110,8 +126,9 @@ class ViewController: UIViewController {
         button.backgroundColor = .systemIndigo
         button.setTitle("6", for: .normal)
         button.titleLabel?.font = button.titleLabel?.font.withSize(24)
-        
+        button.tag = 6
         button.clipsToBounds = true
+        button.addTarget(self, action: #selector(digitButtonPressed), for: .touchUpInside)
         //        button.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .semibold)
         button.layer.cornerRadius = 40
         return button
@@ -122,7 +139,8 @@ class ViewController: UIViewController {
         button.backgroundColor = .systemIndigo
         button.setTitle("7", for: .normal)
         button.titleLabel?.font = button.titleLabel?.font.withSize(24)
-        
+        button.addTarget(self, action: #selector(digitButtonPressed), for: .touchUpInside)
+        button.tag = 7
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
@@ -133,7 +151,8 @@ class ViewController: UIViewController {
         button.backgroundColor = .systemIndigo
         button.setTitle("8", for: .normal)
         button.titleLabel?.font = button.titleLabel?.font.withSize(24)
-        
+        button.addTarget(self, action: #selector(digitButtonPressed), for: .touchUpInside)
+        button.tag = 8
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
@@ -144,7 +163,8 @@ class ViewController: UIViewController {
         button.backgroundColor = .systemIndigo
         button.setTitle("9", for: .normal)
         button.titleLabel?.font = button.titleLabel?.font.withSize(24)
-        
+        button.addTarget(self, action: #selector(digitButtonPressed), for: .touchUpInside)
+        button.tag = 9
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
@@ -166,7 +186,7 @@ class ViewController: UIViewController {
         button.backgroundColor = .systemMint
         button.setTitle("=", for: .normal)
         button.titleLabel?.font = button.titleLabel?.font.withSize(36)
-        
+        //        button.addTarget(self, action: #selector(equalsButtonPressed), for: .touchUpInside)
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
@@ -177,8 +197,9 @@ class ViewController: UIViewController {
         button.backgroundColor = .systemMint
         button.setTitle("+", for: .normal)
         button.clipsToBounds = true
+        button.tag = Operations.pluse.rawValue
         button.titleLabel?.font = button.titleLabel?.font.withSize(24)
-        
+        button.addTarget(self, action: #selector(operationPressed), for: .touchUpInside)
         button.layer.cornerRadius = 40
         return button
     }()
@@ -188,8 +209,9 @@ class ViewController: UIViewController {
         button.backgroundColor = .systemMint
         button.setTitle("-", for: .normal)
         button.titleLabel?.font = button.titleLabel?.font.withSize(48)
-        
+        button.addTarget(self, action: #selector(operationPressed), for: .touchUpInside)
         button.clipsToBounds = true
+        button.tag = Operations.minus.rawValue
         button.layer.cornerRadius = 40
         return button
     }()
@@ -199,8 +221,9 @@ class ViewController: UIViewController {
         button.backgroundColor = .systemMint
         button.setTitle("/", for: .normal)
         button.clipsToBounds = true
+        button.tag = Operations.divede.rawValue
         button.titleLabel?.font = button.titleLabel?.font.withSize(36)
-        
+        button.addTarget(self, action: #selector(operationPressed), for: .touchUpInside)
         button.layer.cornerRadius = 40
         return button
     }()
@@ -210,11 +233,13 @@ class ViewController: UIViewController {
         button.backgroundColor = .systemMint
         button.setTitle("*", for: .normal)
         button.titleLabel?.font = button.titleLabel?.font.withSize(48)
+        button.tag = Operations.multiply.rawValue
+        button.addTarget(self, action: #selector(operationPressed), for: .touchUpInside)
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupScene()
@@ -256,8 +281,7 @@ private extension ViewController {
         }
         resultLabel.snp.makeConstraints{
             $0.height.equalTo(100)
-            
-            $0.centerX.equalTo(resultView).offset(150)
+            $0.left.right.equalToSuperview().inset(25)
             $0.centerY.equalTo(resultView).offset(100)
         }
         firstButton.snp.makeConstraints{
@@ -368,24 +392,42 @@ private extension ViewController {
         }
     }
     
-    @objc func digitButtonPressed() {
-        guard let digit = firstButton.currentTitle else { return }
+    @objc func digitButtonPressed(sender: Any) {
+        guard let button = sender as? UIButton else {return}
+        currentNumber += String(button.tag)
         
-        if isTypingNumber {
-            currentNumber += digit
-        } else {
-            currentNumber = digit
-            isTypingNumber = true
-        }
-        resultLabel.text = currentNumber
     }
     
     @objc func clearButtonPressed() {
-            currentNumber = ""
-            firstOperand = 0
-            operatorSelected = ""
-            isTypingNumber = false
-            resultLabel.text = "0"
+        currentNumber = "0"
+        
+    }
+    @objc func equalButtonPressed() {
+        guard let currentOperation = currentOperation,
+              let left = Int(tempNumber),
+              let right = Int(currentNumber) else {return}
+        let resultNumber: Int
+        
+        switch currentOperation {
+        case .pluse:
+            resultNumber = left + right
+        case .minus:
+            resultNumber = left - right
+        case .divede:
+            resultNumber = left / right
+        case .multiply:
+            resultNumber = left * right
         }
+        currentNumber = "\(resultNumber)"
+        
+    }
+    
+    @objc func operationPressed(sender: Any) {
+        guard let button = sender as? UIButton else {return} 
+        let operation = Operations(rawValue: button.tag)
+        currentOperation = operation
+        tempNumber = currentNumber
+        
+    }
 }
 
