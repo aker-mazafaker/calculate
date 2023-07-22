@@ -7,10 +7,14 @@
 
 import UIKit
 import SnapKit
+import Foundation
 
 class ViewController: UIViewController {
     
-    
+    var currentNumber: String = ""
+    var firstOperand: Double = 0
+    var operatorSelected: String = ""
+    var isTypingNumber: Bool = false
     
     let resultView: UIView = {
         let view = UIView()
@@ -24,60 +28,67 @@ class ViewController: UIViewController {
     let resultLabel: UILabel = {
         let label = UILabel()
         label.text = "0"
+        label.numberOfLines = 0
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 90)
         return label
     }()
+    
+    let zeroButton: UIButton = {
+          let button = UIButton()
+          button.backgroundColor = .systemIndigo
+          button.setTitle("0", for: .normal)
+          button.titleLabel?.font = button.titleLabel?.font.withSize(24)
+          button.addTarget(self, action: #selector(zeroTapped), for: .touchUpInside)
+          button.clipsToBounds = true
+          button.layer.cornerRadius = 40
+          return button
+      }()
     
     let firstButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .systemIndigo
         button.setTitle("1", for: .normal)
         button.titleLabel?.textColor = .red
-        button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
-        //        button.titleLabel?.font = button.titleLabel?.font.withSize(48)
-        button.titleLabel?.font = UIFont(name: "Helvetica", size: 48)
-        button.titleLabel?.adjustsFontSizeToFitWidth = false
+        button.titleLabel?.font = button.titleLabel?.font.withSize(24)
+        button.addTarget(self, action: #selector(digitButtonPressed), for: .touchUpInside)
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
     }()
-    
+
     let secondButton: UIButton = {
         let button = UIButton()
-        button.configuration = .filled()
-        button.tintColor = .systemIndigo
+        button.backgroundColor = .systemIndigo
         button.setTitle("2", for: .normal)
+        button.titleLabel?.font = button.titleLabel?.font.withSize(24)
+        button.addTarget(self, action: #selector(digitButtonPressed), for: .touchUpInside)
+        
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
     }()
+  
     
     let thirdButton: UIButton = {
         let button = UIButton()
-        button.configuration = .filled()
-        button.tintColor = .systemIndigo
+        button.backgroundColor = .systemIndigo
         button.setTitle("3", for: .normal)
+        button.titleLabel?.font = button.titleLabel?.font.withSize(24)
+        button.addTarget(self, action: #selector(digitButtonPressed), for: .touchUpInside)
+        
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
     }()
     
-    let zeroButton: UIButton = {
-        let button = UIButton()
-        button.configuration = .filled()
-        button.tintColor = .systemIndigo
-        button.setTitle("0", for: .normal)
-        button.clipsToBounds = true
-        button.layer.cornerRadius = 40
-        return button
-    }()
-    
+
     let fourthButton: UIButton = {
         let button = UIButton()
-        button.configuration = .filled()
-        button.tintColor = .systemIndigo
+        button.backgroundColor = .systemIndigo
         button.setTitle("4", for: .normal)
+        button.titleLabel?.font = button.titleLabel?.font.withSize(24)
+        
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
@@ -85,9 +96,10 @@ class ViewController: UIViewController {
     
     let fifthButton: UIButton = {
         let button = UIButton()
-        button.configuration = .filled()
-        button.tintColor = .systemIndigo
+        button.backgroundColor = .systemIndigo
         button.setTitle("5", for: .normal)
+        button.titleLabel?.font = button.titleLabel?.font.withSize(24)
+        
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
@@ -95,9 +107,10 @@ class ViewController: UIViewController {
     
     let sixthButton: UIButton = {
         let button = UIButton()
-        button.configuration = .filled()
-        button.tintColor = .systemIndigo
+        button.backgroundColor = .systemIndigo
         button.setTitle("6", for: .normal)
+        button.titleLabel?.font = button.titleLabel?.font.withSize(24)
+        
         button.clipsToBounds = true
         //        button.titleLabel?.font = UIFont.systemFont(ofSize: 24, weight: .semibold)
         button.layer.cornerRadius = 40
@@ -106,9 +119,10 @@ class ViewController: UIViewController {
     
     let seventhButton: UIButton = {
         let button = UIButton()
-        button.configuration = .filled()
-        button.tintColor = .systemIndigo
+        button.backgroundColor = .systemIndigo
         button.setTitle("7", for: .normal)
+        button.titleLabel?.font = button.titleLabel?.font.withSize(24)
+        
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
@@ -116,9 +130,10 @@ class ViewController: UIViewController {
     
     let eighthButton: UIButton = {
         let button = UIButton()
-        button.configuration = .filled()
-        button.tintColor = .systemIndigo
+        button.backgroundColor = .systemIndigo
         button.setTitle("8", for: .normal)
+        button.titleLabel?.font = button.titleLabel?.font.withSize(24)
+        
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
@@ -126,9 +141,10 @@ class ViewController: UIViewController {
     
     let ninthButton: UIButton = {
         let button = UIButton()
-        button.configuration = .filled()
-        button.tintColor = .systemIndigo
+        button.backgroundColor = .systemIndigo
         button.setTitle("9", for: .normal)
+        button.titleLabel?.font = button.titleLabel?.font.withSize(24)
+        
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
@@ -136,9 +152,10 @@ class ViewController: UIViewController {
     
     let ceButton: UIButton = {
         let button = UIButton()
-        button.configuration = .filled()
-        button.tintColor = .systemMint
+        button.backgroundColor = .systemMint
         button.setTitle("CE", for: .normal)
+        button.titleLabel?.font = button.titleLabel?.font.withSize(24)
+        button.addTarget(self, action: #selector(clearButtonPressed), for: .touchUpInside)
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
@@ -146,9 +163,10 @@ class ViewController: UIViewController {
     
     let equalsButton: UIButton = {
         let button = UIButton()
-        button.configuration = .filled()
-        button.tintColor = .systemMint
+        button.backgroundColor = .systemMint
         button.setTitle("=", for: .normal)
+        button.titleLabel?.font = button.titleLabel?.font.withSize(36)
+        
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
@@ -156,19 +174,21 @@ class ViewController: UIViewController {
     
     let pluseButton: UIButton = {
         let button = UIButton()
-        button.configuration = .filled()
-        button.tintColor = .systemMint
+        button.backgroundColor = .systemMint
         button.setTitle("+", for: .normal)
         button.clipsToBounds = true
+        button.titleLabel?.font = button.titleLabel?.font.withSize(24)
+        
         button.layer.cornerRadius = 40
         return button
     }()
     
     let minusButton: UIButton = {
         let button = UIButton()
-        button.configuration = .filled()
-        button.tintColor = .systemMint
+        button.backgroundColor = .systemMint
         button.setTitle("-", for: .normal)
+        button.titleLabel?.font = button.titleLabel?.font.withSize(48)
+        
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
@@ -176,26 +196,25 @@ class ViewController: UIViewController {
     
     let divideButton: UIButton = {
         let button = UIButton()
-        button.configuration = .filled()
-        button.tintColor = .systemMint
+        button.backgroundColor = .systemMint
         button.setTitle("/", for: .normal)
         button.clipsToBounds = true
+        button.titleLabel?.font = button.titleLabel?.font.withSize(36)
+        
         button.layer.cornerRadius = 40
         return button
     }()
     
     let multiplyButton: UIButton = {
         let button = UIButton()
-        button.configuration = .filled()
-        button.tintColor = .systemMint
+        button.backgroundColor = .systemMint
         button.setTitle("*", for: .normal)
+        button.titleLabel?.font = button.titleLabel?.font.withSize(48)
         button.clipsToBounds = true
         button.layer.cornerRadius = 40
         return button
     }()
-    
-    
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupScene()
@@ -225,6 +244,7 @@ private extension ViewController {
         view.addSubview(minusButton)
         view.addSubview(divideButton)
         view.addSubview(multiplyButton)
+        
     }
     
     func makeConstraints() {
@@ -235,6 +255,8 @@ private extension ViewController {
             $0.centerY.equalToSuperview().offset(-200)
         }
         resultLabel.snp.makeConstraints{
+            $0.height.equalTo(100)
+            
             $0.centerX.equalTo(resultView).offset(150)
             $0.centerY.equalTo(resultView).offset(100)
         }
@@ -337,4 +359,33 @@ private extension ViewController {
             $0.centerY.equalToSuperview().offset(50)
         }
     }
+    
+    @objc func zeroTapped() {
+        if resultLabel.text != "0" {
+            if let text = resultLabel.text {
+                resultLabel.text = "\(text)\(0)"
+            }
+        }
+    }
+    
+    @objc func digitButtonPressed() {
+        guard let digit = firstButton.currentTitle else { return }
+        
+        if isTypingNumber {
+            currentNumber += digit
+        } else {
+            currentNumber = digit
+            isTypingNumber = true
+        }
+        resultLabel.text = currentNumber
+    }
+    
+    @objc func clearButtonPressed() {
+            currentNumber = ""
+            firstOperand = 0
+            operatorSelected = ""
+            isTypingNumber = false
+            resultLabel.text = "0"
+        }
 }
+
