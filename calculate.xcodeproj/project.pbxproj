@@ -15,8 +15,9 @@
 		3F2FC8722A644FA50036AA88 /* calculateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2FC8712A644FA50036AA88 /* calculateTests.swift */; };
 		3F2FC87C2A644FA50036AA88 /* calculateUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2FC87B2A644FA50036AA88 /* calculateUITests.swift */; };
 		3F2FC87E2A644FA50036AA88 /* calculateUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2FC87D2A644FA50036AA88 /* calculateUITestsLaunchTests.swift */; };
-		3F2FC88B2A6452E50036AA88 /* functionality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2FC88A2A6452E50036AA88 /* functionality.swift */; };
 		3F2FC88E2A6453000036AA88 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3F2FC88D2A6453000036AA88 /* SnapKit */; };
+		3F2FC9112A6FEE440036AA88 /* design.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2FC9102A6FEE440036AA88 /* design.swift */; };
+		3F2FC9132A70F8E20036AA88 /* Constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2FC9122A70F8E20036AA88 /* Constraints.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,7 +50,8 @@
 		3F2FC8772A644FA50036AA88 /* calculateUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = calculateUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F2FC87B2A644FA50036AA88 /* calculateUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = calculateUITests.swift; sourceTree = "<group>"; };
 		3F2FC87D2A644FA50036AA88 /* calculateUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = calculateUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		3F2FC88A2A6452E50036AA88 /* functionality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = functionality.swift; sourceTree = "<group>"; };
+		3F2FC9102A6FEE440036AA88 /* design.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = design.swift; sourceTree = "<group>"; };
+		3F2FC9122A70F8E20036AA88 /* Constraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constraints.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,7 +106,8 @@
 				3F2FC85A2A644FA40036AA88 /* AppDelegate.swift */,
 				3F2FC85C2A644FA40036AA88 /* SceneDelegate.swift */,
 				3F2FC85E2A644FA40036AA88 /* ViewController.swift */,
-				3F2FC88A2A6452E50036AA88 /* functionality.swift */,
+				3F2FC9102A6FEE440036AA88 /* design.swift */,
+				3F2FC9122A70F8E20036AA88 /* Constraints.swift */,
 				3F2FC8632A644FA50036AA88 /* Assets.xcassets */,
 				3F2FC8652A644FA50036AA88 /* LaunchScreen.storyboard */,
 				3F2FC8682A644FA50036AA88 /* Info.plist */,
@@ -267,8 +270,9 @@
 			files = (
 				3F2FC85F2A644FA40036AA88 /* ViewController.swift in Sources */,
 				3F2FC85B2A644FA40036AA88 /* AppDelegate.swift in Sources */,
+				3F2FC9112A6FEE440036AA88 /* design.swift in Sources */,
+				3F2FC9132A70F8E20036AA88 /* Constraints.swift in Sources */,
 				3F2FC85D2A644FA40036AA88 /* SceneDelegate.swift in Sources */,
-				3F2FC88B2A6452E50036AA88 /* functionality.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
